@@ -6,26 +6,33 @@ wget \
 php \
 php-mysqli \
 php-fpm \
+php7.3 \
 mariadb-server
-
-COPY ./tools /var/www/
-
-RUN chmod +x /var/www/wordpress_setup.sh
 
 # # INSTALL WORDPRESS
 # # To use WP-CLI from the command line by typing wp,
 # # make the file executable
 # # move it to somewhere in your PATH
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
-RUN chmod +x wp-cli.phar
-RUN mv wp-cli.phar /usr/local/bin/wp 
+RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
+&& chmod +x wp-cli.phar \
+&& mv wp-cli.phar /usr/local/bin/wp 
+
+#Create the folder to enable php start
+RUN mkdir /run/php
+
+COPY ./tools /var/www/
+COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
+
+
+RUN chmod +x /var/www/wordpress_setup.sh
+
+ENTRYPOINT [ "var/www/wordpress_setup.sh" ]
 
 EXPOSE 9000
-
-ENTRYPOINT [ "/var/www/wordpress_setup.sh" ]
-
-CMD [ "bash" ]
+# CMD [ "bash" ]
 # CMD [ "apache2ctl", "-D", "FOREGROUND" ]
-# CMD ["/usr/sbin/php-fpm7.3", "--nodaemonize"]
+
+# launch php-fpm in the foreground and ignore deaminize from the conf file (-F)
+CMD ["/usr/sbin/php-fpm7.3", "--nodaemonize"]
 
 # docker run -d --name my-wordpress -p 8080:80 my-wordpress
