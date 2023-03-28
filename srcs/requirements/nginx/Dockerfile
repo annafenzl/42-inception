@@ -7,7 +7,7 @@ FROM debian:buster
 RUN apt update \
 && apt install nginx openssl -y
 
-COPY ./configs/default /etc/nginx/sites-enabled/
+COPY ./configs/default /etc/nginx/sites-enabled/default
 COPY ./tools/nginx_start.sh /var/www/
 
 RUN chmod +x /var/www/nginx_start.sh
