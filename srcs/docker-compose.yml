@@ -1,0 +1,38 @@
+version: "3.8"
+
+services:
+
+  mariadb:
+    container_name: mariadb
+    build: requirements/mariadb
+    networks:
+      - inception
+    restart: always
+    expose:
+      - 3306
+  
+  nginx:
+    container_name: nginx
+    build: requirements/nginx
+    networks:
+      - inception
+    ports:
+      - 443:443
+    restart: always
+
+  wordpress:
+    container_name: wordpress
+    build: requirements/wordpress
+    networks:
+      - inception
+    depends_on:
+      - mariadb
+    restart: always
+
+    # or should restart be on_failure
+
+# ------------- network ------------
+networks:
+  inception:
+    driver: bridge
+

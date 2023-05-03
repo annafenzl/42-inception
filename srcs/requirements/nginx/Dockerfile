@@ -1,7 +1,4 @@
-
-# parser directives i.e. # escape=` (backtick)
-
-# ARG may be the only command preceeding
+# run with docker run -dp 443:443 my_nginx
 FROM debian:buster
 
 RUN apt update \
@@ -15,12 +12,11 @@ RUN chmod +x /var/www/nginx_start.sh
 ENTRYPOINT [ "var/www/nginx_start.sh" ]
 
 CMD ["nginx", "-g", "daemon off;"]
-# docker run -dp 443:80 test (do i need -it/)
+# docker run -dp 443:80 my_nginx (do i need -it/)
 # docker exec -it <container name> /bin/bash
 
 # RUN ["executable", "param1", "param2"] (if you use that read the rulse again)
 # The default shell for the shell form can be changed using the SHELL command.
-
 
 # CMD ["executable","param1","param2"] (exec form, this is the preferred form)
 # CMD ["param1","param2"] (as default parameters to ENTRYPOINT)

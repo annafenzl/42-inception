@@ -19,3 +19,6 @@ EXPOSE 3306
 # mysql -p
 
 CMD ["mysqld"]
+
+# how do i need to run the container
+# docker run --name mariadb_container my_mariadb (-p 3306:3306)
