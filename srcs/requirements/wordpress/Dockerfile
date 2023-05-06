@@ -8,7 +8,8 @@ php-mysqli \
 php-fpm \
 php-common \
 php7.3 \
-mariadb-client
+mariadb-client \
+sendmail
 
 # # INSTALL WORDPRESS_COMMAND_LINE_INTERFACE
 # # To use WP-CLI from the command line by typing wp,

@@ -1,27 +1,25 @@
 #!bin/bash
 
-# if ! wp core is-installed; then
-#     wp core install
-# fi
-
 mkdir website
 cd website
 
-bash
+# bash
 
-# apt-get install sendmail
+sleep 3
+until mysql --host=$MYSQL_HOST --user=$MYSQL_USER --password=$MYSQL_USER_PASSWORD -e '\c'; do
+    sleep 3
+done
 
-wp core download --allow-root
+if ! wp core is-installed --path=/var/www/html --allow-root 2>/dev/null; then
+    wp core download --allow-root
+    wp config create --allow-root \
+        --dbname=$MYSQL_NAME --dbuser=$MYSQL_USER --dbpass=$MYSQL_USER_PASSWORD --dbhost=$MYSQL_HOST
+    wp core install --allow-root --url=$DOMAIN_NAME --title=$WP_TITLE --admin_user=$WP_ADMIN_USER --admin_password=$WP_ADMIN_PASSWORD --admin_email=$WP_ADMIN_MAIL
+    wp user create --allow-root --porcelain \
+    "$WP_USER" "$WP_USER_MAIL" --role=author --user_pass="$WP_USER_PASSWORD"
+fi
+chown -R www-data:www-data /var/www
 
-# dbhost: ifconfig inet, maybe set back to mariadb when doing docker-compose
-# wp core config  --allow-root --dbhost=172.17.0.1:3306 --dbname=wordpress --dbuser=afenzl --dbpass=letmein
-wp config create --allow-root --dbhost=172.17.0.1:3306 --dbname=wordpress --dbuser=afenzl --dbpass=letmein
-
-chmod 600 wp-config.php
-# echo "config file is set up!"
-
-wp core install  --allow-root --url=afenzl.42.fr --title="MY WEBSITE" --admin_name=ruler --admin_password=letmein --admin_email=annaselinafenzl@gmail.com
-# wp user create --allow-root ${WP_USER_LOGIN} ${WP_USER_EMAIL} --user_pass=${WP_USER_PASSWORD};
 echo "Wordpress: set up!"
 
 exec "$@"
