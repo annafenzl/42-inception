@@ -1,0 +1,25 @@
+Open a web browser and navigate to https://login.42.fr. You should see your WordPress website.
+
+Log in to the WordPress admin dashboard using the administrator account you created. Make sure you can create and publish a new blog post.
+
+Try to access the MariaDB container using the following command:
+
++ |works| docker exec -it <mariadb-container-name> mysql -u <username> -p
+
+You should be prompted for a password. Enter the password you set for the database user, and make sure you can connect to the database.
+
+Try to access the NGINX container using the following command:
+
++ docker exec -it <nginx-container-name> sh
+
+You should be able to access the container shell. You can also check the NGINX logs to make sure everything is working as expected.
+
+Test the container restart functionality by intentionally crashing one of the containers (e.g., by stopping the MariaDB container). The container should automatically restart after a few seconds.
+
+Check the contents of the two volumes using the following commands:
+
+docker volume inspect <wordpress-database-volume-name>
+
+docker volume inspect <wordpress-website-volume-name>
+
+You should see the correct volume paths and other information.
