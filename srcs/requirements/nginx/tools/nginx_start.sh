@@ -1,6 +1,6 @@
 #!bin/bash
 
-# setting up ssl
+# setting up ssl Certificate
 echo "setting up ssl"
 openssl req -x509 -nodes -days 356 -newkey rsa:4096 -keyout /etc/ssl/private/nginx.key -out /etc/ssl/certs/nginx.crt -subj /C=DE/ST=Heilbronn/L=Heilbronn/O=wordpress/CN=afenzl.42.fr
 echo "ssl is set up!"
