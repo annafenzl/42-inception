@@ -1,37 +1,22 @@
 FROM debian:buster
 
-RUN apt-get update \
-&& apt install -y \
-wget \
-php \
-php-mysqli \
-php-fpm \
-php-common \
-php7.3 \
-mariadb-client \
-sendmail
+RUN apt-get -y update
+RUN apt-get -y install curl
+RUN apt-get -y install php php-common php-mysqli php-fpm
+RUN apt-get -y install mariadb-client
 
-# # INSTALL WORDPRESS_COMMAND_LINE_INTERFACE
-# # To use WP-CLI from the command line by typing wp,
-# # make the file executable
-# # move it to somewhere in your PATH
-RUN wget https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar \
-&& chmod +x wp-cli.phar \
-&& mv wp-cli.phar /usr/local/bin/wp
+RUN mkdir -p /run/php
+RUN mkdir -p /var/www/html/
+WORKDIR /var/www/html
 
-#Create the folder to enable php start
-RUN mkdir /run/php
+RUN curl -O https://raw.githubusercontent.com/wp-cli/builds/gh-pages/phar/wp-cli.phar
+RUN chmod +x wp-cli.phar
+RUN mv wp-cli.phar /usr/local/bin/wp-cli
 
-COPY ./tools /var/www/
-COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d
+COPY ./tools/entrypoint.sh /entrypoint.sh
+RUN chmod 777 /entrypoint.sh
+COPY ./conf/www.conf /etc/php/7.3/fpm/pool.d/
 
-RUN chmod +x /var/www/wordpress_setup.sh
+ENTRYPOINT [ "/entrypoint.sh" ]
 
-EXPOSE 9000
-
-ENTRYPOINT [ "/var/www/wordpress_setup.sh" ]
-
-# launch php-fpm in the foreground and ignore deaminize from the conf file (-F)
-CMD ["/usr/sbin/php-fpm7.3", "--nodaemonize"]
-# CMD ["bin/bash"]
-
+CMD [ "php-fpm7.3", "--nodaemonize" ]

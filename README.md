@@ -32,7 +32,7 @@ shared folders
 access domain
 Volumes
 how to test them
+get wordpress website
 
 TO DO:
-get wordpress website
 test them

@@ -11,7 +11,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - db_data:/var/lib/mysql
+      - mariadb_volume:/var/lib/mysql
     expose:
       - "3306"
   
@@ -25,7 +25,7 @@ services:
     env_file:
       - ./.env
     volumes:
-      - wp_data:/var/www/html
+      - wordpress_volume:/var/www/html
     restart: always
 
   wordpress:
@@ -38,22 +38,20 @@ services:
     env_file:
       - ./.env
     volumes:
-      - wp_data:/var/www/html
-    ports:
-      - 80:9000
+      - wordpress_volume:/var/www/html
     restart: always
 
     # or should restart be on_failure
 
 # ----------- volumes --------------
 volumes:
-  db_data:
+  mariadb_volume:
     driver: local
     driver_opts:
       device: /home/user42/data/mariadb_v
       type: none
       o: bind
-  wp_data:
+  wordpress_volume:
     driver: local
     driver_opts:
       device: /home/user42/data/wordpress_v

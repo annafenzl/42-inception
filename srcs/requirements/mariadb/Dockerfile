@@ -1,24 +1,19 @@
 FROM debian:buster
 
-# INSTALL mariadb
-RUN apt-get update
-RUN apt-get install -y mariadb-server
+RUN apt-get update -y
+RUN apt-get install mariadb-server -y
 
-# copy sql cmds and server conf in container
-COPY ./tools/mariadb_setup.sql /var/www/
-COPY ./conf/50-server.cnf /etc/mysql/mariadb.conf.d/
+COPY ./conf/my.cnf /etc/mysql/
+COPY ./tools/entrypoint.sh ./entrypoint.sh
 
-RUN service mysql start && mysql < /var/www/mariadb_setup.sql && rm -f /var/www/mariadb_setup.sql;
+RUN chmod 777 ./entrypoint.sh
 
 EXPOSE 3306
 
-# to test stuff
-# COPY ./tools/test.sh /var/www/
-# RUN chmod +x /var/www/test.sh
-# ENTRYPOINT [ "/var/www/test.sh" ]
-# mysql -p
+ENTRYPOINT ["./entrypoint.sh"]
 
-CMD ["mysqld"]
-
-# how do i need to run the container
-# docker run --name mariadb_container my_mariadb (-p 3306:3306)
+# docker exec -it mariadb mysql -u root
+# docker exec -it mariadb mysql -u afenzl -p
+# USE $(MARIA_DB_NAME);
+# SHOW TABLES; --> if not empty, the db has content
+# SELECT COUNT(*) FROM table_name;
