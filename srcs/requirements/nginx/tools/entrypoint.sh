@@ -1,4 +1,4 @@
-#!bin/bash
+#!/bin/bash
 
 # setting up ssl Certificate
 echo "setting up ssl"

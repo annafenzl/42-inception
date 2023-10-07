@@ -3,7 +3,8 @@ version: "3.8"
 services:
 
   mariadb:
-    container_name: mariadb
+    image: mariadb
+    container_name: mariadb_c
     build: requirements/mariadb
     networks:
       - inception
@@ -16,7 +17,8 @@ services:
       - "3306"
   
   nginx:
-    container_name: nginx
+    image: nginx
+    container_name: nginx_c
     build: requirements/nginx
     networks:
       - inception
@@ -29,7 +31,8 @@ services:
     restart: always
 
   wordpress:
-    container_name: wordpress
+    image: wordpress
+    container_name: wordpress_c
     build: requirements/wordpress
     networks:
       - inception
@@ -41,20 +44,21 @@ services:
       - wordpress_volume:/var/www/html
     restart: always
 
-    # or should restart be on_failure
-
 # ----------- volumes --------------
 volumes:
   mariadb_volume:
+    name: mariadb_volume
     driver: local
     driver_opts:
-      device: /home/user42/data/mariadb_v
+      device: /home/afenzl/data/mariadb_v
       type: none
       o: bind
+  
   wordpress_volume:
+    name: wordpress_volume
     driver: local
     driver_opts:
-      device: /home/user42/data/wordpress_v
+      device: /home/afenzl/data/wordpress_v
       type: none
       o: bind
 
